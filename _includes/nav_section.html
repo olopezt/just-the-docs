@@ -1,0 +1,13 @@
+<li class="nav-list-item{% if activeUrls contains section.url %} active{% endif %}">
+    <!-- Section -->
+    {%- if section.items -%}
+    <a href="#" class="nav-list-expander"><svg viewBox="0 0 24 24"><use xlink:href="#svg-arrow-right"></use></svg></a>
+    {%- endif -%}
+    <a href="{{ section.url }}" class="nav-list-link{% if activeUrls contains section.url %} active{% endif %}">{{ section.title }}</a>
+
+    <!-- Section items -->
+    {%- for item in section.items -%}
+        {% include add_nav_item.html
+            item = item %}
+    {%- endfor -%}
+</li>

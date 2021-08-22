@@ -1,14 +1,23 @@
 <ul class="nav-list">
     {%- for section in site.data.navigation.sections -%}
-        {%- assign activeUrls = page.url | split: ',' -%}
+        {%- assign page_url_components = page.url | split: '/' | shift -%}
 
-        <!-- This recursively sets the `activeUrls` parameter with all the URLs that are in the navigation stack -->
+        <!-- This generates a list of active IDs from the URL -->
+        {% assign page_url_components_without_html = '' | split: '' %}
+        {% for component in page_url_components %}
+          {% assign newComponent = component | remove: ".html" %}
+          {% assign page_url_components_without_html = page_url_components_without_html | push: newComponent %}
+        {% endfor %}
+
+        <!-- This recursively sets the `activeIds` parameter with all the URLs that are in the navigation stack -->
+        {%- assign activeIds = "" | split: ',' -%}
         {% include add_active_urls.html
-            parent = section
-            activeUrls = activeUrls %}
+            item = section
+            components = page_url_components_without_html
+            nextComponent = 0 %}
 
         <!-- This recursively includes all the content within a section -->
         {% include nav_section.html
-            activeUrls = activeUrls %}
+            nextComponent = 0 %}
     {%- endfor -%}
 </ul>

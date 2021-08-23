@@ -134,17 +134,32 @@ layout: table_wrappers
           {{ content }}
         {% endif %}
 
-        {% if page.has_children == true and page.has_toc != false %}
+        {% if page.show_table_of_contents %}
           <hr>
           <h2 class="text-delta">Table of contents</h2>
           <ul>
-            {%- assign children_list = pages_list | where: "parent", page.title | where: "grand_parent", page.parent -%}
-            {% for child in children_list %}
-              <li>
-                <a href="{{ child.url | absolute_url }}">{{ child.title }}</a>{% if child.summary %} - {{ child.summary }}{% endif %}
-              </li>
-            {% endfor %}
+              {%- include current_page_id.html -%}
+              {%- for section in site.data.navigation.sections -%}
+                {% include find_current_item.html
+                    item = section
+                    next_item_number = 0 %}
+              {%- endfor -%}
+
+              {%- for item in currentItem.items -%}
+                  <!-- Set up URLs -->
+                  {%- assign pageUrlSizeMinusOne = page.url.size | minus: 1 -%} <!-- The base URL is the current URL without the last / when there's children -->
+                  {%- assign childItemURL = page.url | slice: 0, pageUrlSizeMinusOne | append: '/' | append: item.id -%}
+                  {%- unless item.items -%}
+                    {%- assign childItemURL = childItemURL | append: ".html" -%}
+                  {%- endunless -%}
+
+                  <!-- Show table of contents -->
+                  {%- include show_table_of_contents_item.html
+                      item = item
+                      item_url = childItemURL -%}
+              {%- endfor -%}
           </ul>
+
         {% endif %}
 
         {% capture footer_custom %}

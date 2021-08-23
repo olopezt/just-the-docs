@@ -1,0 +1,10 @@
+{%- assign page_url_components = page.url | split: '/' | shift -%}
+
+<!-- This generates a list of active IDs from the URL -->
+{% assign current_page_ids = '' | split: '' %}
+{% for component in page_url_components %}
+  {% assign newComponent = component | remove: ".html" %}
+  {% assign current_page_ids = current_page_ids | push: newComponent %}
+{% endfor %}
+
+{% assign current_page_id = current_page_ids.last %}

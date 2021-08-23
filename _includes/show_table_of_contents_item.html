@@ -1,0 +1,19 @@
+<li>
+  <a href="{{ include.item_url }}">{{ include.item.title }}</a>
+
+  {% assign childNextComponent = include.nextComponent | plus: 1  %}
+
+  {%- for item in include.item.items -%}
+      {%- assign itemURL = include.item_url | append: '/' | append: item.id -%}
+      {%- unless item.items -%}
+        {%- assign itemURL = itemURL | append: ".html" -%}
+      {%- endunless -%}
+
+      <!-- Sub items should have a tab -->
+      <ul class="nav-list ">
+        {%- include show_table_of_contents_item.html
+            item = item
+            item_url = itemURL -%}
+      </ul>
+  {%- endfor -%}
+</li>

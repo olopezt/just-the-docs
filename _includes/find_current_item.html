@@ -1,0 +1,15 @@
+{%- if include.item.id == current_page_ids[include.next_item_number] -%}
+    {%- assign currentPageIdsSize = current_page_ids.size | minus: 1 -%}
+    {%- if currentPageIdsSize == include.next_item_number -%}
+        {%- assign currentItem = include.item -%}
+    {%- else -%}
+        {% assign nextItemNumber = include.next_item_number | plus: 1  %}
+
+        {%- for item in include.item.items -%}
+            {%- include find_current_item.html
+                item = item
+                next_item_number = nextItemNumber
+                 -%}
+        {%- endfor -%}
+    {%- endif -%}
+{%- endif -%}

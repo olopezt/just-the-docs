@@ -1,13 +1,26 @@
-<li class="nav-list-item{% if activeUrls contains section.url %} active{% endif %}">
+<li class="nav-list-item{% if activeIds[include.nextComponent] == section.id %} active{% endif %}">
     <!-- Section -->
     {%- if section.items -%}
     <a href="#" class="nav-list-expander"><svg viewBox="0 0 24 24"><use xlink:href="#svg-arrow-right"></use></svg></a>
     {%- endif -%}
-    <a href="{{ section.url }}" class="nav-list-link{% if activeUrls contains section.url %} active{% endif %}">{{ section.title }}</a>
+
+    <!-- Define URL -->
+    {%- assign sectionURL = '/' | append: section.id -%}
+
+    <a href="{{ sectionURL }}" class="nav-list-link{% if activeIds[include.nextComponent] == section.id %} active{% endif %}">{{ section.title }}</a>
 
     <!-- Section items -->
+    {% assign nextComponent = include.nextComponent | plus: 1  %}
+
     {%- for item in section.items -%}
+        {%- assign childItemURL = sectionURL | append: '/' | append: item.id -%}
+        {%- unless item.items -%}
+          {%- assign childItemURL = childItemURL | append: ".html" -%}
+        {%- endunless -%}
+
         {% include add_nav_item.html
-            item = item %}
+            item = item
+            item_url = childItemURL
+            nextComponent = nextComponent %}
     {%- endfor -%}
 </li>

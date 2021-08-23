@@ -1,13 +1,12 @@
-{%- for children in include.parent.items -%}
-    {%- if children.items -%}
-        {% include add_active_urls.html
-            parent = children %}
-    {%- endif -%}
+{%- if include.components[include.nextComponent] == include.item.id -%}
+    {%- assign activeIds = activeIds | push: include.item.id -%}
 
-    <!-- Here we have already added the activeURL for the children, so we verify
-    if the children is set as active. If so, the parent should be active as well. -->
-    {%- if children.url == page.url or activeUrls contains children.url -%}
-        <!-- Set the parent as active -->
-        {%- assign activeUrls = activeUrls | push: include.parent.url -%}
-    {%- endif -%}
-{%- endfor -%}
+    {% assign nextComponent = include.nextComponent | plus: 1  %}
+
+    {%- for children in include.item.items -%}
+        {% include add_active_urls.html
+            item = children
+            components = page_url_components_without_html
+            nextComponent = nextComponent %}
+    {%- endfor -%}
+{%- endif -%}
